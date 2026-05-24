@@ -12,28 +12,38 @@ export function CreateTenantForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [submitting, setSubmitting] = useState(false);
+  const [refreshing, startTransition] = useTransition();
+
+  // submitting covers the fetch (CREATE DATABASE + migrate deploy — the slow part).
+  // refreshing covers the router.refresh() that re-renders the list afterwards.
+  const loading = submitting || refreshing;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setSubmitting(true);
 
-    const res = await fetch("/api/tenants", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name }),
-    });
+    try {
+      const res = await fetch("/api/tenants", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
 
-    if (!res.ok) {
-      const { error: msg } = (await res.json().catch(() => ({ error: "Request failed" }))) as {
-        error?: string;
-      };
-      setError(msg ?? "Request failed");
-      return;
+      if (!res.ok) {
+        const { error: msg } = (await res.json().catch(() => ({ error: "Request failed" }))) as {
+          error?: string;
+        };
+        setError(msg ?? "Request failed");
+        return;
+      }
+
+      setName("");
+      startTransition(() => router.refresh());
+    } finally {
+      setSubmitting(false);
     }
-
-    setName("");
-    startTransition(() => router.refresh());
   }
 
   return (
@@ -45,12 +55,13 @@ export function CreateTenantForm() {
           placeholder="empresa_x"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          disabled={loading}
           required
         />
       </div>
-      <Button type="submit" disabled={pending || !name.trim()}>
-        {pending ? <Loader2 className="animate-spin" /> : null}
-        Create tenant
+      <Button type="submit" disabled={loading || !name.trim()}>
+        {loading ? <Loader2 className="animate-spin" /> : null}
+        {submitting ? "Creating…" : refreshing ? "Refreshing…" : "Create tenant"}
       </Button>
       {error ? (
         <p className="ml-3 text-sm text-destructive" role="alert">

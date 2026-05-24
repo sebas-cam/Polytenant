@@ -17,3 +17,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Singleton-style: exactly one row per tenant DB, id = "singleton".
+// Used to render the tenant's public landing page on its subdomain.
+model TenantSettings {
+  id             String   @id @default("singleton")
+  primaryColor   String   @default("#0f172a")
+  secondaryColor String   @default("#f8fafc")
+  headline       String   @default("Welcome")
+  description    String   @default("This is your tenant landing page.")
+  updatedAt      DateTime @updatedAt
+}

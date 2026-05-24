@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CreateTenantForm } from "@/components/create-tenant-form";
+import { SyncTenantsButton } from "@/components/sync-tenants-button";
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +39,12 @@ export default async function TenantsPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Registered tenants</CardTitle>
-          <CardDescription>{tenants.length} total</CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
+          <div>
+            <CardTitle>Registered tenants</CardTitle>
+            <CardDescription>{tenants.length} total</CardDescription>
+          </div>
+          <SyncTenantsButton />
         </CardHeader>
         <CardContent>
           <Table>

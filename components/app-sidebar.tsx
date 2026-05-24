@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, Home, Users } from "lucide-react";
+import { Building2, Home, Palette, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 const items = [
   { href: "/", label: "Overview", icon: Home },
   { href: "/tenants", label: "Tenants", icon: Building2 },
+  { href: "/design", label: "Design", icon: Palette },
   { href: "/users", label: "Users", icon: Users },
 ];
 

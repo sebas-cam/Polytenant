@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 
-import { rootPrisma } from "@/lib/prisma";
+import { rootPrisma, getTenantPrisma } from "@/lib/prisma";
 
 const TENANT_NAME_RE = /^[a-z][a-z0-9_]{0,62}$/;
 
@@ -44,6 +44,14 @@ export async function createTenant(name: string) {
   execSync(`npx prisma migrate deploy --schema "${schemaPath}"`, {
     env: { ...process.env, DATABASE_URL: connectionString },
     stdio: "pipe",
+  });
+
+  // 4. Seed the singleton TenantSettings row so /design always has data to show.
+  const tenantClient = getTenantPrisma(connectionString);
+  await tenantClient.tenantSettings.upsert({
+    where: { id: "singleton" },
+    create: { id: "singleton", headline: name },
+    update: {},
   });
 
   return tenant;
