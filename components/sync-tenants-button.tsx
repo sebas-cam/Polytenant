@@ -50,7 +50,7 @@ export function SyncTenantsButton() {
       {result?.kind === "ok" ? (
         <p className="text-sm text-muted-foreground">
           Synced {result.synced} tenant(s) in {result.durationMs} ms
-          {result.tenants.length > 0 ? `: ${result.tenants.join(", ")}` : ""}
+          {/* {result.tenants.length > 0 ? `: ${result.tenants.join(", ")}` : ""} */}
         </p>
       ) : null}
       {result?.kind === "err" ? (
