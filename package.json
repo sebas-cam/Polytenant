@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "tenants:sync": "tsx scripts/sync-tenants.ts",
+    "db:studio:root": "prisma studio --schema prisma/schema.prisma",
+    "db:studio:tenant": "prisma studio --schema prisma/tenant/schema.prisma"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
@@ -37,6 +40,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }
