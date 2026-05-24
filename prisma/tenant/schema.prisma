@@ -1,0 +1,19 @@
+// Per-tenant database schema. Each tenant DB has this shape.
+// `prisma migrate deploy` is run against every tenant DB on creation / on sync.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/tenant-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
